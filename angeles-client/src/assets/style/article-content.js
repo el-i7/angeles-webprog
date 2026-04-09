@@ -1,0 +1,82 @@
+// Enhancement 2: Custom article-content.js based on Angeles BSIT Portfolio theme
+
+const articles = [
+  {
+    name: "why-html-still-matters",
+    title: "Why Semantic HTML Still Matters in 2025",
+    img: "https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=800&q=80",
+    tag: "HTML & CSS",
+    readTime: "4 min read",
+    content: [
+      "With all the modern frameworks available today, it's easy to overlook the importance of writing semantic HTML. But beneath every great React app is a foundation of well-structured markup.",
+      "Semantic elements like <header>, <main>, <article>, and <section> tell the browser — and assistive technologies — exactly what role each part of the page plays. This matters enormously for accessibility and SEO.",
+      "When I first started building web pages, I used <div> for everything. It worked visually, but screen readers had no way of understanding the content structure. Switching to semantic HTML made my pages more inclusive overnight.",
+      "Search engines also reward semantic markup. A page where headings are properly nested and content is wrapped in meaningful elements is easier for crawlers to index and rank.",
+      "The rule of thumb I follow: if there's a semantic element that describes what you're building, use it. Reserve <div> and <span> for purely presentational purposes.",
+      "As a BSIT student, learning semantic HTML was one of the most impactful early lessons I had. It costs nothing extra and makes everything — from styling to scripting to accessibility — easier.",
+    ],
+  },
+  {
+    name: "understanding-the-dom",
+    title: "Understanding the DOM: A Beginner's Guide",
+    img: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+    tag: "JavaScript",
+    readTime: "6 min read",
+    content: [
+      "The Document Object Model, or DOM, is the browser's live representation of your HTML page. Every tag becomes a node in a tree structure that JavaScript can read and manipulate.",
+      "When you write document.getElementById('root'), you're asking the browser to find the DOM node with that ID. React itself uses this exact call in main.jsx to mount your entire app.",
+      "Understanding the DOM helps you debug JavaScript errors more effectively. When something isn't rendering, it often means a DOM node doesn't exist yet or has the wrong ID.",
+      "DOM manipulation used to mean writing a lot of vanilla JavaScript — querySelector, addEventListener, innerHTML. Modern frameworks like React abstract this away, but the concept is the same under the hood.",
+      "One key insight: the DOM is separate from your HTML file. The HTML is just the initial blueprint. The DOM is what the browser builds from it — and JavaScript can reshape it entirely after the page loads.",
+      "I'd recommend every BSIT student spend at least a few hours manipulating the DOM directly with vanilla JavaScript before jumping to frameworks. It gives you a much clearer mental model of what React is actually doing.",
+    ],
+  },
+  {
+    name: "my-first-figma-project",
+    title: "My First Time Using Figma: Lessons Learned",
+    img: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+    tag: "UI/UX Design",
+    readTime: "5 min read",
+    content: [
+      "Before I learned Figma, I would jump straight into code whenever I had an idea for a page layout. The result was always the same: lots of CSS rewrites and a design that didn't quite feel right.",
+      "Figma changed that. Being able to drag, resize, and rearrange elements before writing a single line of code saved me hours of rework on every project that followed.",
+      "The first thing that surprised me was how much of good UI design is about spacing. Consistent padding, alignment grids, and white space aren't aesthetic choices — they're what makes a layout feel professional.",
+      "Typography was the second big lesson. Pairing a bold display font with a clean body font, and using a strict type scale (12, 14, 16, 20, 24, 32...), gives a page hierarchy and rhythm that's hard to achieve when you're guessing sizes in CSS.",
+      "I also learned about components in Figma — reusable design elements that mirror how React components work in code. Designing a Button component in Figma first made it much easier to decide what props it needed when I built it in React.",
+      "If you're a BSIT student who hasn't tried Figma yet, start with a simple wireframe of a page you want to build. You'll be surprised how much clearer your thinking becomes once you can see the layout before committing to code.",
+    ],
+  },
+  {
+    name: "component-thinking-with-react",
+    title: "Component Thinking: How React Changed My Approach",
+    img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
+    tag: "React JS",
+    readTime: "7 min read",
+    content: [
+      "Before React, I wrote HTML pages where the navigation bar was copy-pasted into every single file. Updating one link meant updating five files — and I always missed one.",
+      "React's component model solves this completely. A NavBar component is defined once and used everywhere. Change it in one place and every page updates automatically.",
+      "The mental shift React requires is thinking in pieces rather than pages. Instead of asking 'how do I build this page?', you ask 'what are the reusable building blocks of this page?'",
+      "Props are what make components flexible. A Button component that accepts a variant prop can render as a primary or secondary button without duplicating any code. This is exactly the pattern used in this portfolio.",
+      "In Lab Activity 2 and 3, we built a Layout component that wraps every page with a NavBar and Footer, and an ArticleList component that accepts articles as props and renders them as cards. This is real-world component architecture.",
+      "The biggest mindset change for me was accepting that a component should do one thing well. If a component is getting too long or handling too many concerns, it's a signal to split it into smaller pieces.",
+      "React won't make you a better developer overnight — but it will force you to write more organized, reusable code. That habit alone is worth the learning curve.",
+    ],
+  },
+  {
+    name: "css-tips-for-beginners",
+    title: "5 CSS Tips That Made Me a Better Developer",
+    img: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&q=80",
+    tag: "HTML & CSS",
+    readTime: "5 min read",
+    content: [
+      "CSS has a reputation for being unpredictable, but most of the frustration comes from a few misunderstood concepts. Here are five things that cleared up the confusion for me.",
+      "First: understand the box model. Every element is a box with content, padding, border, and margin. Use box-sizing: border-box globally so that padding and border don't expand your element sizes unexpectedly.",
+      "Second: learn Flexbox before anything else. It solves 80% of layout problems — centering, spacing items evenly, aligning things in a row or column. Tailwind's flex utilities are just Flexbox with shorter names.",
+      "Third: use CSS custom properties (variables) for your colors and spacing. Defining --color-primary once and using it everywhere means a brand color change is a one-line fix.",
+      "Fourth: stop fighting specificity and start organizing your styles. A predictable naming convention — even something simple — prevents the cascade from becoming a mess.",
+      "Fifth: mobile-first is not just a buzzword. Writing your base styles for small screens and using min-width media queries to expand for larger screens produces cleaner, more maintainable CSS than the reverse.",
+    ],
+  },
+];
+
+export default articles;

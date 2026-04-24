@@ -1,4 +1,3 @@
-// Enhancement 2: Custom article-content.js based on Angeles BSIT Portfolio theme
 
 const articles = [
   {

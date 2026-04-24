@@ -1,4 +1,4 @@
-import Button from '../components/Button';
+import Button from '../../components/Button';
 
 const skills = [
   { name: 'JavaScript', level: 80 },
@@ -16,7 +16,7 @@ const overviewStats = [
 
 const timeline = [
   {
-    year: '2023',
+    year: '2022',
     title: 'Started BSIT at National University',
     desc: 'Began my journey in Information Technology, diving into programming fundamentals, computer networks, and web development basics.',
   },
@@ -57,7 +57,7 @@ const AboutPage = () => {
               About Me
             </p>
             <h1 className="max-w-xl text-3xl font-extrabold leading-tight text-zinc-900 sm:text-4xl">
-              Hi, I'm Shannan Angeles — a developer who loves turning ideas into interfaces.
+              Hi, I'm Angeles — a developer who loves turning ideas into interfaces.
             </h1>
             <p className="mt-4 max-w-lg text-sm leading-7 text-zinc-600">
               I'm a 3rd year BSIT student at National University, focused on web development

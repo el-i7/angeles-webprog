@@ -1,5 +1,3 @@
-import { Outlet } from 'react-router-dom';
-import NavBar from './NavBar';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -13,7 +11,6 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              {/* Inline logo */}
               <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="#6366f1" />
                 <text x="18" y="25" textAnchor="middle" fontSize="18" fontWeight="800" fontFamily="Georgia, serif" fill="white">A</text>
@@ -85,17 +82,4 @@ const Footer = () => {
   );
 };
 
-const Layout = () => {
-  return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 flex flex-col">
-      <NavBar />
-      {/* pt-20 offsets the fixed navbar height */}
-      <main className="flex-1 pb-0 pt-20">
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
-export default Layout;
+export default Footer;

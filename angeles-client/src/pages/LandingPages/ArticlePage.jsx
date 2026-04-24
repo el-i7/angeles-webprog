@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import Button from '../components/Button';
-import articles from '../assets/style/article-content';
+import Button from '../../components/Button';
+import articles from '../../assets/style/article-content';
 
 function ArticlePage() {
   // Reads the :name segment from /articles/:name

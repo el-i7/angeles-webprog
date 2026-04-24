@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 const links = [
   { label: 'Home', to: '/' },
@@ -14,24 +14,11 @@ const navLinkClassName = ({ isActive }) =>
       : 'text-zinc-500 hover:text-indigo-700',
   ].join(' ');
 
-// Custom SVG Logo — Enhancement 3
+// Custom SVG Logo
 const Logo = () => (
   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Angeles Logo">
-    <polygon
-      points="18,2 33,10 33,26 18,34 3,26 3,10"
-      fill="#4338ca"
-    />
-    <text
-      x="18"
-      y="25"
-      textAnchor="middle"
-      fontSize="18"
-      fontWeight="800"
-      fontFamily="Georgia, serif"
-      fill="white"
-    >
-      A
-    </text>
+    <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="#4338ca" />
+    <text x="18" y="25" textAnchor="middle" fontSize="18" fontWeight="800" fontFamily="Georgia, serif" fill="white">A</text>
     <circle cx="27" cy="9" r="3" fill="#a5b4fc" />
   </svg>
 );
@@ -68,13 +55,21 @@ const NavBar = () => {
           ))}
         </nav>
 
-        {/* CTA */}
-        <a
-          href="/articles"
-          className="hidden md:inline-flex items-center rounded-full bg-indigo-700 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-indigo-800 transition-colors shadow"
-        >
-          Read Blog
-        </a>
+        {/* Enhancement 3: Auth access points */}
+        <div className="hidden md:flex items-center gap-2">
+          <Link
+            to="/auth/signin"
+            className="px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-600 hover:text-indigo-700 transition-colors"
+          >
+            Log In
+          </Link>
+          <Link
+            to="/auth/signup"
+            className="inline-flex items-center rounded-full bg-indigo-700 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white hover:bg-indigo-800 transition-colors shadow"
+          >
+            Sign Up
+          </Link>
+        </div>
 
         {/* Mobile menu icon */}
         <button className="flex flex-col gap-1.5 p-2 md:hidden" aria-label="Open menu">

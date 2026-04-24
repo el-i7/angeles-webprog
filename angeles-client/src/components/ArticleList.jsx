@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from './Button';
 
-// Receives articles array as a prop — reusable anywhere
 const ArticleList = ({ articles }) => {
   return (
     <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">

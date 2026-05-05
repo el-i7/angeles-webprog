@@ -8,9 +8,9 @@ import { Gauge } from '@mui/x-charts/Gauge';
 // ── Sample Data ──
 const columns = [
   { field: 'id',        headerName: 'ID',         width: 60 },
-  { field: 'firstName', headerName: 'First name',  width: 130, editable: true },
-  { field: 'lastName',  headerName: 'Last name',   width: 130, editable: true },
-  { field: 'age',       headerName: 'Age',         type: 'number', width: 80, editable: true },
+  { field: 'firstName', headerName: 'First name',  width: 130 },
+  { field: 'lastName',  headerName: 'Last name',   width: 130 },
+  { field: 'age',       headerName: 'Age',         type: 'number', width: 80 },
   {
     field: 'fullName',
     headerName: 'Full name',
@@ -22,18 +22,14 @@ const columns = [
 ];
 
 const rows = [
-  { id: 1,  lastName: 'Snow',       firstName: 'Jon',        age: 14  },
-  { id: 2,  lastName: 'Lannister',  firstName: 'Cersei',     age: 31  },
-  { id: 3,  lastName: 'Lannister',  firstName: 'Jaime',      age: 31  },
-  { id: 4,  lastName: 'Stark',      firstName: 'Arya',       age: 11  },
-  { id: 5,  lastName: 'Targaryen',  firstName: 'Daenys',   age: null },
-  { id: 6,  lastName: 'Melisandre', firstName: null,         age: 150 },
-  { id: 7,  lastName: 'Clifford',   firstName: 'Ferrara',    age: 44  },
-  { id: 8,  lastName: 'Frances',    firstName: 'Rossini',    age: 36  },
-  { id: 9,  lastName: 'Roxie',      firstName: 'Harvey',     age: 65  },
+  { id: 1, firstName: 'Alicia',  lastName: 'Reyes',  age: 29 },
+  { id: 2, firstName: 'Marco',   lastName: 'Santos', age: 31 },
+  { id: 3, firstName: 'Bianca',  lastName: 'Cruz',   age: 26 },
+  { id: 4, firstName: 'Nathan',  lastName: 'Diaz',   age: 34 },
+  { id: 5, firstName: 'Jasmine', lastName: 'Garcia', age: 28 },
+  { id: 6, firstName: 'Ethan',   lastName: 'Lopez',  age: 33 },
 ];
 
-// Fix: compute average age outside JSX to avoid syntax issues
 const validAges = rows.filter((row) => row.age !== null);
 const averageAge = (validAges.reduce((sum, row) => sum + row.age, 0) / validAges.length).toFixed(1);
 
@@ -67,7 +63,7 @@ function DashboardPage() {
         <Card sx={{ minWidth: 160, borderLeft: '4px solid #c084fc' }}>
           <CardContent>
             <Typography variant="h6" color="text.secondary">Active</Typography>
-            <Typography variant="h4" fontWeight={800}>7</Typography>
+            <Typography variant="h4" fontWeight={800}>4</Typography>
           </CardContent>
         </Card>
       </Stack>

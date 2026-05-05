@@ -10,8 +10,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -23,13 +21,14 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PeopleIcon from '@mui/icons-material/People';
 import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import ArticleIcon from '@mui/icons-material/Article';
+import SearchIcon from '@mui/icons-material/Search';
 
 const drawerWidth = 240;
 
 const dashboardNavItems = [
-  { label: 'Dashboard', title: 'Dashboard', to: '/dashboard/', icon: DashboardIcon },
+  { label: 'Dashboard', title: 'Dashboard', to: '/dashboard/',        icon: DashboardIcon },
   { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports', icon: AssessmentIcon },
   { label: 'Users',     title: 'Users',     to: '/dashboard/users',   icon: PeopleIcon },
 ];
@@ -98,35 +97,39 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-// Search bar styled components
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
+// ── Search styled components (kept minimal, inside the navbar bar) ──
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': { backgroundColor: alpha(theme.palette.common.white, 0.25) },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: { marginLeft: theme.spacing(3), width: 'auto' },
+  '&:focus-within': { backgroundColor: alpha(theme.palette.common.white, 0.25) },
+  display: 'flex',
+  alignItems: 'center',
+  marginLeft: theme.spacing(2),
+  width: 'auto',
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 1.5),
+  height: '100%',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'rgba(255,255,255,0.8)',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#fff',
+  fontSize: 14,
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: { width: '12ch' },
+    padding: theme.spacing(0.75, 1.5, 0.75, 0),
+    width: '18ch',
+    '&::placeholder': {
+      color: 'rgba(255,255,255,0.65)',
+      opacity: 1,
+    },
   },
 }));
 
@@ -134,10 +137,10 @@ const getPageTitle = (pathname) =>
   dashboardNavItems.find(({ to }) => to === pathname)?.title ?? 'Welcome';
 
 const DashLayout = () => {
-  const theme = useTheme();
+  const theme     = useTheme();
   const [open, setOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location  = useLocation();
+  const navigate  = useNavigate();
   const pageTitle = getPageTitle(location.pathname);
 
   const handleDrawerOpen  = () => setOpen(true);
@@ -145,131 +148,124 @@ const DashLayout = () => {
   const handleLogout      = () => navigate('/');
 
   return (
-    <>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
 
-        {/* ── Top AppBar ── */}
-        <AppBar position="fixed" open={open} sx={{ bgcolor: '#4338ca' }}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={open ? handleDrawerClose : handleDrawerOpen}
-              edge="start"
-              sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
-            >
-              {open ? <MenuOpenIcon /> : <MenuIcon />}
-            </IconButton>
+      {/* ── Top AppBar ── */}
+      <AppBar position="fixed" open={open} sx={{ bgcolor: '#4338ca' }}>
+        <Toolbar>
 
-            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-              {pageTitle}
-            </Typography>
+          {/* Hamburger */}
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
+            edge="start"
+            sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
+          >
+            {open ? <MenuOpenIcon /> : <MenuIcon />}
+          </IconButton>
 
-            {/* Search */}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
+          {/* Page title */}
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
+            {pageTitle}
+          </Typography>
 
-            {/* Logout */}
-            <Button color="inherit" variant="outlined" onClick={handleLogout}
-              sx={{ ml: 1, borderColor: 'rgba(255,255,255,0.5)', fontSize: '0.7rem',
-                    letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Logout
-            </Button>
-          </Toolbar>
-        </AppBar>
+          {/* ── Search — sits inside the colored bar ── */}
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon sx={{ fontSize: 18 }} />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
 
-        {/* ── Sidebar Drawer ── */}
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            {/* Logo area when open */}
-            {open && (
-              <Box sx={{ flexGrow: 1, pl: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                  <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="#4338ca" />
-                  <text x="18" y="25" textAnchor="middle" fontSize="18" fontWeight="800"
-                    fontFamily="Georgia, serif" fill="white">A</text>
-                  <circle cx="27" cy="9" r="3" fill="#a5b4fc" />
-                </svg>
-                <Typography variant="caption" fontWeight={800} sx={{ color: '#4338ca', letterSpacing: 1 }}>
-                  ANGELES
-                </Typography>
-              </Box>
-            )}
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </DrawerHeader>
+          {/* Logout */}
+          <Button
+            color="inherit"
+            variant="outlined"
+            onClick={handleLogout}
+            sx={{
+              ml: 2,
+              borderColor: 'rgba(255,255,255,0.5)',
+              fontSize: '0.7rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              '&:hover': {
+                borderColor: '#fff',
+                bgcolor: 'rgba(255,255,255,0.12)',
+              },
+            }}
+          >
+            Logout
+          </Button>
 
-          <Divider />
+        </Toolbar>
+      </AppBar>
 
-          {/* Nav Items */}
-          <List>
-            {dashboardNavItems.map(({ label, to, icon: Icon }) => (
-              <ListItem key={to} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  component={Link}
-                  to={to}
-                  selected={location.pathname === to}
-                  sx={{
-                    minHeight: 48,
-                    px: 2.5,
-                    justifyContent: open ? 'initial' : 'center',
-                    '&.Mui-selected': {
-                      bgcolor: '#ede9fe',
-                      color: '#4338ca',
-                      '& .MuiListItemIcon-root': { color: '#4338ca' },
-                    },
-                    '&:hover': { bgcolor: '#f5f3ff' },
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+      {/* ── Sidebar Drawer ── */}
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          {open && (
+            <Box sx={{ flexGrow: 1, pl: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+                <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="#4338ca" />
+                <text x="18" y="25" textAnchor="middle" fontSize="18" fontWeight="800"
+                  fontFamily="Georgia, serif" fill="white">A</text>
+                <circle cx="27" cy="9" r="3" fill="#a5b4fc" />
+              </svg>
+              <Typography variant="caption" fontWeight={800} sx={{ color: '#4338ca', letterSpacing: 1 }}>
+                ANGELES
+              </Typography>
+            </Box>
+          )}
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </DrawerHeader>
 
-          <Divider />
+        <Divider />
 
-          {/* Back to site */}
-          <List>
-            <ListItem disablePadding sx={{ display: 'block' }}>
+        {/* Nav Items only — Back to Site removed */}
+        <List>
+          {dashboardNavItems.map(({ label, to, icon: Icon }) => (
+            <ListItem key={to} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 component={Link}
-                to="/"
+                to={to}
+                selected={location.pathname === to}
                 sx={{
                   minHeight: 48,
                   px: 2.5,
                   justifyContent: open ? 'initial' : 'center',
+                  '&.Mui-selected': {
+                    bgcolor: '#ede9fe',
+                    color: '#4338ca',
+                    '& .MuiListItemIcon-root': { color: '#4338ca' },
+                  },
                   '&:hover': { bgcolor: '#f5f3ff' },
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
-                  <ArticleIcon />
+                  <Icon />
                 </ListItemIcon>
-                <ListItemText primary="Back to Site" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
-          </List>
-        </Drawer>
+          ))}
+        </List>
 
-        {/* ── Main Content ── */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <DrawerHeader />
-          <Outlet />
-        </Box>
+      </Drawer>
+
+      {/* ── Main Content ── */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+        <Outlet />
       </Box>
-    </>
+
+    </Box>
   );
 };
 

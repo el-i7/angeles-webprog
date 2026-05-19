@@ -20,17 +20,19 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PeopleIcon from '@mui/icons-material/People';
+import ArticleIcon from '@mui/icons-material/Article';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SearchIcon from '@mui/icons-material/Search';
 
 const drawerWidth = 240;
 
+// Enhancement 1: Users is admin-only, Articles available to both admin and editor
 const dashboardNavItems = [
-  { label: 'Dashboard', title: 'Dashboard', to: '/dashboard/',        icon: DashboardIcon },
-  { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports', icon: AssessmentIcon },
-  { label: 'Users',     title: 'Users',     to: '/dashboard/users',   icon: PeopleIcon },
+  { label: 'Dashboard', title: 'Dashboard', to: '/dashboard/',         icon: DashboardIcon,  roles: ['admin', 'editor'] },
+  { label: 'Reports',   title: 'Reports',   to: '/dashboard/reports',  icon: AssessmentIcon, roles: ['admin', 'editor'] },
+  { label: 'Users',     title: 'Users',     to: '/dashboard/users',    icon: PeopleIcon,     roles: ['admin'] },           // admin only
+  { label: 'Articles',  title: 'Articles',  to: '/dashboard/articles', icon: ArticleIcon,    roles: ['admin', 'editor'] },
 ];
 
 const openedMixin = (theme) => ({
@@ -97,7 +99,6 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-// ── Search styled components (kept minimal, inside the navbar bar) ──
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -126,10 +127,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     padding: theme.spacing(0.75, 1.5, 0.75, 0),
     width: '18ch',
-    '&::placeholder': {
-      color: 'rgba(255,255,255,0.65)',
-      opacity: 1,
-    },
+    '&::placeholder': { color: 'rgba(255,255,255,0.65)', opacity: 1 },
   },
 }));
 
@@ -143,9 +141,23 @@ const DashLayout = () => {
   const navigate  = useNavigate();
   const pageTitle = getPageTitle(location.pathname);
 
+  const userType  = localStorage.getItem('type') || '';
+  const firstName = localStorage.getItem('firstName') || '';
+
+  // Enhancement 1: filter nav items based on role
+  const visibleNavItems = dashboardNavItems.filter((item) =>
+    item.roles.includes(userType)
+  );
+
   const handleDrawerOpen  = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
-  const handleLogout      = () => navigate('/');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('type');
+    navigate('/auth/signin');
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -154,8 +166,6 @@ const DashLayout = () => {
       {/* ── Top AppBar ── */}
       <AppBar position="fixed" open={open} sx={{ bgcolor: '#4338ca' }}>
         <Toolbar>
-
-          {/* Hamburger */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -163,45 +173,30 @@ const DashLayout = () => {
             edge="start"
             sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
           >
-            {open ? <MenuOpenIcon /> : <MenuIcon />}
+            <MenuIcon />
           </IconButton>
 
-          {/* Page title */}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
-            {pageTitle}
+            {firstName ? `Welcome, ${firstName}` : pageTitle}
           </Typography>
 
-          {/* ── Search — sits inside the colored bar ── */}
           <Search>
             <SearchIconWrapper>
               <SearchIcon sx={{ fontSize: 18 }} />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
+            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
           </Search>
 
-          {/* Logout */}
           <Button
-            color="inherit"
-            variant="outlined"
-            onClick={handleLogout}
+            color="inherit" variant="outlined" onClick={handleLogout}
             sx={{
-              ml: 2,
-              borderColor: 'rgba(255,255,255,0.5)',
-              fontSize: '0.7rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              '&:hover': {
-                borderColor: '#fff',
-                bgcolor: 'rgba(255,255,255,0.12)',
-              },
+              ml: 2, borderColor: 'rgba(255,255,255,0.5)',
+              fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase',
+              '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.12)' },
             }}
           >
             Logout
           </Button>
-
         </Toolbar>
       </AppBar>
 
@@ -228,9 +223,9 @@ const DashLayout = () => {
 
         <Divider />
 
-        {/* Nav Items only — Back to Site removed */}
+        {/* Role-filtered nav items */}
         <List>
-          {dashboardNavItems.map(({ label, to, icon: Icon }) => (
+          {visibleNavItems.map(({ label, to, icon: Icon }) => (
             <ListItem key={to} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 component={Link}
@@ -241,8 +236,7 @@ const DashLayout = () => {
                   px: 2.5,
                   justifyContent: open ? 'initial' : 'center',
                   '&.Mui-selected': {
-                    bgcolor: '#ede9fe',
-                    color: '#4338ca',
+                    bgcolor: '#ede9fe', color: '#4338ca',
                     '& .MuiListItemIcon-root': { color: '#4338ca' },
                   },
                   '&:hover': { bgcolor: '#f5f3ff' },
@@ -257,6 +251,7 @@ const DashLayout = () => {
           ))}
         </List>
 
+      
       </Drawer>
 
       {/* ── Main Content ── */}
@@ -264,7 +259,6 @@ const DashLayout = () => {
         <DrawerHeader />
         <Outlet />
       </Box>
-
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 
 // Layouts
 import Layout from './layouts/Layout';
@@ -19,9 +19,25 @@ import SignUpPage from './pages/AuthPages/SignUpPage';
 import DashboardPage from './pages/DashboardPages/DashboardPage';
 import ReportsPage from './pages/DashboardPages/ReportsPage';
 import UsersPage from './pages/DashboardPages/UsersPage';
+import DashArticleListPage from './pages/DashboardPages/DashArticleListPage';
 
 // Other
 import NotFoundPage from './pages/NotFoundPage';
+
+// ✅ Enhancement 1 fix: editors CAN access UsersPage, only viewers cannot
+const EditorAndAboveRoute = ({ children }) => {
+  const userType = localStorage.getItem('type') || 'admin';
+  if (!userType) return <Navigate to="/auth/signin" />;
+  if (userType === 'viewer') return <Navigate to="/dashboard/" />;
+  return children;
+};
+
+// Protect entire dashboard from unauthenticated users
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  if (!token) return <Navigate to="/auth/signin" />;
+  return children;
+};
 
 const routes = [
   {
@@ -46,12 +62,25 @@ const routes = [
   },
   {
     path: 'dashboard/',
-    element: <DashLayout />,
+    element: (
+      <ProtectedRoute>
+        <DashLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       { path: '', element: <DashboardPage /> },
       { path: 'reports', element: <ReportsPage /> },
-      { path: 'users', element: <UsersPage /> },
+      {
+        path: 'users',
+        element: (
+          // ✅ admin and editor can access, viewer cannot
+          <EditorAndAboveRoute>
+            <UsersPage />
+          </EditorAndAboveRoute>
+        ),
+      },
+      { path: 'articles', element: <DashArticleListPage /> },
     ],
   },
 ];

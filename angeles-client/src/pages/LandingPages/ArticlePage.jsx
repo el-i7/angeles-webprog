@@ -1,14 +1,48 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '../../components/Button';
-import articles from '../../data/article-content';
+import { fetchArticles } from '../../services/ArticleService';
 
 function ArticlePage() {
-  // Reads the :name segment from /articles/:name
   const { name } = useParams();
-  const article = articles.find((article) => article.name === name);
+  const [article, setArticle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  // If article is not found in the list
-  if (!article) {
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await fetchArticles();
+        // Match by slug (the :name param in the URL)
+        const found = data.articles.find(
+          (a) => a.slug === name && a.status === 'active'
+        );
+        if (found) {
+          setArticle(found);
+        } else {
+          setNotFound(true);
+        }
+      } catch {
+        console.error('Failed to load article');
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [name]);
+
+  // ── LOADING STATE ──
+  if (loading) {
+    return (
+      <div className="flex w-full items-center justify-center py-20">
+        <p className="text-zinc-500 text-sm">Loading article…</p>
+      </div>
+    );
+  }
+
+  // ── NOT FOUND STATE ──
+  if (notFound || !article) {
     return (
       <div className="flex w-full flex-col gap-6">
         <section className="border-y-2 border-zinc-900 bg-zinc-50 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -20,6 +54,13 @@ function ArticlePage() {
       </div>
     );
   }
+
+  // Split content into paragraphs — handles both array and plain string
+  const paragraphs = Array.isArray(article.content)
+    ? article.content
+    : typeof article.content === 'string'
+    ? article.content.split('\n').filter(Boolean)
+    : [];
 
   return (
     <div className="flex w-full flex-col gap-0">
@@ -70,17 +111,28 @@ function ArticlePage() {
             </div>
           )}
 
-          {/* Article paragraphs */}
-          <div className="space-y-5">
-            {article.content.map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-base leading-7 text-zinc-700 whitespace-pre-wrap"
-              >
-                {paragraph}
-              </p>
-            ))}
-          </div>
+          {/* Preview / intro */}
+          {article.preview && (
+            <p className="mb-6 text-base font-medium leading-7 text-zinc-600 border-l-4 border-indigo-400 pl-4 italic">
+              {article.preview}
+            </p>
+          )}
+
+          {/* Article content paragraphs */}
+          {paragraphs.length > 0 ? (
+            <div className="space-y-5">
+              {paragraphs.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-base leading-7 text-zinc-700 whitespace-pre-wrap"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-zinc-400 text-sm italic">No content available.</p>
+          )}
 
           {/* Footer CTA */}
           <div className="mt-10 border-t-2 border-zinc-900 pt-6 flex flex-wrap gap-3">

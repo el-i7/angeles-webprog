@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
+import { fetchArticles } from '../../services/ArticleService';
 
 const stats = [
   { value: '3+', label: 'Years Coding' },
@@ -7,28 +9,22 @@ const stats = [
   { value: '2', label: 'Internships' },
 ];
 
-const features = [
-  {
-    title: 'Frontend Development',
-    desc: 'I build clean, responsive web interfaces using HTML, CSS, and JavaScript. Every project I work on prioritizes usability, accessibility, and visual clarity.',
-    img: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&q=80',
-    alt: 'Frontend development',
-  },
-  {
-    title: 'UI/UX Design',
-    desc: "Good design is more than aesthetics — it's about how things work. I create wireframes and prototypes that put the user experience at the center of every decision.",
-    img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80',
-    alt: 'UI UX Design process',
-  },
-  {
-    title: 'Problem Solving',
-    desc: "As a BSIT student, I've been trained to break down complex problems into manageable solutions — whether it's debugging code or designing a system architecture.",
-    img: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=600&q=80',
-    alt: 'Problem solving with tech',
-  },
-];
-
 const HomePage = () => {
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await fetchArticles();
+        // Show only active articles, limit to 3 for the homepage
+        setArticles(data.articles.filter((a) => a.status === 'active').slice(0, 3));
+      } catch {
+        console.error('Failed to load articles');
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="flex w-full flex-col gap-0">
 
@@ -85,32 +81,67 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ── WHAT I DO ── */}
+      {/* ── WHAT I DO (live articles) ── */}
       <section className="border-y-2 border-zinc-900 bg-zinc-50 px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-400">
-              What I Do
-            </p>
-            <h2 className="mt-2 text-2xl font-semibold text-zinc-900">My core areas of focus</h2>
+          <div className="mb-6 flex items-end justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-400">
+                What I Write
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold text-zinc-900">My core areas of focus</h2>
+            </div>
+            <Button to="/articles" variant="secondary">View All →</Button>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {features.map((f) => (
-              <article key={f.title} className="rounded-3xl border-2 border-zinc-900 bg-white overflow-hidden hover:shadow-lg transition-shadow group">
-                <div className="aspect-video w-full overflow-hidden">
-                  <img
-                    src={f.img}
-                    alt={f.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-zinc-900">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-zinc-600">{f.desc}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+
+          {articles.length === 0 ? (
+            <p className="text-zinc-400 text-sm">No articles published yet.</p>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-3">
+              {articles.map((article) => (
+                <article
+                  key={article._id}
+                  className="rounded-3xl border-2 border-zinc-900 bg-white overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer"
+                  onClick={() => window.location.href = `/articles/${article.slug}`}
+                >
+                  {/* Image or placeholder */}
+                  {article.img ? (
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img
+                        src={article.img}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-video w-full bg-indigo-100 flex items-center justify-center border-b-2 border-zinc-900">
+                      <span className="text-indigo-300 text-5xl font-black select-none">
+                        {article.title?.charAt(0) ?? 'A'}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="p-5">
+                    {/* Tag */}
+                    {article.tag && (
+                      <span className="mb-2 inline-block rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-indigo-700">
+                        {article.tag}
+                      </span>
+                    )}
+                    <h3 className="text-lg font-bold text-zinc-900 group-hover:text-indigo-700 transition-colors">
+                      {article.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-zinc-600 line-clamp-3">
+                      {article.preview}
+                    </p>
+                    <p className="mt-3 text-xs font-semibold text-indigo-600 group-hover:underline">
+                      Read more →
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
